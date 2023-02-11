@@ -1,5 +1,5 @@
 //
-// Created by Orion Letizi on 2/11/23.
+// Dummy Arduino header for CMake.
 //
 
 #ifndef CMAKE_ARDUINO_CLI_EXPERIMENT_ARDUINO_DUMMY_H
@@ -21,6 +21,20 @@ void pinMode(int i, int i1);
 void delay(int i) {}
 void digitalWrite(int i, int i1) {}
 void pinMode(int i, int i1) {}
+
+class Print {
+public:
+    static size_t println(std::string msg);
+};
+
+size_t Print::println(std::string msg) {
+    std::cout << msg << '\n';
+    return msg.length();
+}
+
+
+Print Serial;
+
 #else // TARGET_NATIVE not defined (so, we're building for an Arduino
 #include <Arduino.h>
 #endif // TARGET_NATIVE
