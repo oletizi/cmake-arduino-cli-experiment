@@ -1,9 +1,4 @@
-#ifndef NOT_DEFINED
-#include <Arduino.h>
-#else
-#include <Arduino_dummy.h>
-#endif // NOT_DEFINED
-
+#include "Arduino_dummy.h"
 #include "loop.h"
 void Loop::setup() {
     pinMode(MY_LED, OUTPUT);
