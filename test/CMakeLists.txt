@@ -4,7 +4,7 @@ file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false *.h *.cc)
 
 set(SOURCES ${TEST_SOURCES})
 
-add_executable(${BINARY} ${TEST_SOURCES} ../src/Arduino_dummy.h)
+add_executable(${BINARY} ${TEST_SOURCES})
 
 add_test(NAME ${BINARY} COMMAND ${BINARY})
 

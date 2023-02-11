@@ -1,4 +1,3 @@
-#include "Arduino_dummy.h"
 #include "loop.h"
 void Loop::setup() {
     pinMode(MY_LED, OUTPUT);

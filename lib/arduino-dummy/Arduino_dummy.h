@@ -2,8 +2,8 @@
 // Dummy Arduino header for CMake.
 //
 
-#ifndef CMAKE_ARDUINO_CLI_EXPERIMENT_ARDUINO_DUMMY_H
-#define CMAKE_ARDUINO_CLI_EXPERIMENT_ARDUINO_DUMMY_H
+#ifndef ARDUINO_DUMMY_H
+#define ARDUINO_DUMMY_H
 
 #ifdef TARGET_NATIVE
 
@@ -39,4 +39,4 @@ Print Serial;
 #include <Arduino.h>
 #endif // TARGET_NATIVE
 
-#endif //CMAKE_ARDUINO_CLI_EXPERIMENT_ARDUINO_DUMMY_H
+#endif // ARDUINO_DUMMY
