@@ -4,3 +4,6 @@
 [submodule "lib/ArduinoCore-avr"]
 	path = lib/ArduinoCore-avr
 	url = git@github.com:arduino/ArduinoCore-avr.git
+[submodule "lib/arduino-dummy"]
+	path = lib/arduino-dummy
+	url = git@github.com:oletizi/arduino-dummy.git
