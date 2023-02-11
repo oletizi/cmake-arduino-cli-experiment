@@ -1,6 +1,8 @@
 .PHONY: all build upload monitor
 
-PORT := $(shell ./bin/find-port.sh)
+MONITOR_SCRIPT := ./monitor.sh
+FIND_PORT_SCRIPT := ./find-port.sh
+PORT := $(shell ${FIND_PORT_SCRIPT})
 
 all: build upload monitor
 
@@ -11,7 +13,7 @@ upload:
 	arduino-cli upload -p $(PORT) --fqbn teensy:avr:teensy41 .
 
 monitor:
-	./bin/monitor.sh
+	${MONITOR_SCRIPT}
 
 board:
 	arduino-cli board list
