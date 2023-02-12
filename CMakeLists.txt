@@ -18,6 +18,6 @@ include_directories(src lib/arduino-dummy)
 
 add_subdirectory(lib/arduino-dummy)
 add_subdirectory(lib/googletest)
-add_subdirectory(lib/JUCE)
+add_subdirectory(lib/juce)
 add_subdirectory(src)
 add_subdirectory(test)

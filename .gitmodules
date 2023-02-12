@@ -2,17 +2,17 @@
 	path = lib/googletest
 	url = git@github.com:google/googletest.git
 [submodule "lib/ArduinoCore-avr"]
-	path = lib/ArduinoCore-avr
+	path = lib/arduino-core
 	url = git@github.com:arduino/ArduinoCore-avr.git
 [submodule "lib/arduino-dummy"]
 	path = lib/arduino-dummy
 	url = git@github.com:oletizi/arduino-dummy.git
 [submodule "lib/JUCE"]
-	path = lib/JUCE
+	path = lib/juce
 	url = git@github.com:juce-framework/JUCE.git
 [submodule "lib/Audio"]
-	path = lib/Audio
+	path = lib/teensy-audio
 	url = git@github.com:PaulStoffregen/Audio.git
 [submodule "lib/MIDI"]
-	path = lib/MIDI
+	path = lib/teensy-midi
 	url = git@github.com:PaulStoffregen/MIDI.git
