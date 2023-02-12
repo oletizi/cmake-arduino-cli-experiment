@@ -55,6 +55,7 @@ namespace juce {
                 if (device.name.contains(this->inputDeviceName)) {
                     cout << "It's my device: " << this->inputDeviceName << ". Trying to connect!\n";
                     this->midiInput = MidiInput::openDevice(device.identifier, this);
+                    this->midiInput->start();
                     cout << "Connected to " << this->midiInput->getName() << endl;
                 }
             }
