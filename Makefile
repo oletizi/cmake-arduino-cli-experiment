@@ -1,5 +1,5 @@
 PROJECT_NAME := $(shell cat .project-name)
-PROJECT_VERSION : $(shell cat .project-version)
+PROJECT_VERSION := $(shell cat .project-version)
 MONITOR_SCRIPT := ./monitor.sh
 FIND_PORT_SCRIPT := ./find-port.sh
 PORT := $(shell ${FIND_PORT_SCRIPT})

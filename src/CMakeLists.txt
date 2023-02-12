@@ -6,7 +6,6 @@ set(SOURCES
         display.cc
         loop.h
         loop.cpp
-        midi/midi.h
         )
 
 #add_executable(${BINARY}_run ${SOURCES})
