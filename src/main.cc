@@ -4,7 +4,9 @@
 
 namespace juce {
 
-    class MyApp : public JUCEApplicationBase, public MidiInputCallback {
+    class MyApp : public JUCEApplicationBase, public MidiInputCallback, Timer {
+        std::unique_ptr<MidiOutput> midiOutput;
+
     public:
         const String getApplicationName() { return "Thingy!"; }
 
@@ -20,11 +22,28 @@ namespace juce {
             std::cout << "Midi message!" << std::endl;
         }
 
+        void connectToOutput() {
+            auto devices = MidiOutput::getAvailableDevices();
+            for (int i = 0; i < devices.size(); i++) {
+                auto device = devices[i];
+                if (device.name.contains("IAC")) {
+                    std::cout << "Connecting to midi device: " << device.name << std::endl;
+                    this->midiOutput = MidiOutput::openDevice(device.identifier);
+                }
+            }
+        }
+
         void initialise(const String &commandLineParameters) override {
             printf("Initializing!\n");
+            std::cout << "Starting timer...";
+            Timer::startTimer(1000);
+
+            connectToOutput();
+
             auto devices = MidiInput::getAvailableDevices();
             printf("Device count: %d\n", devices.size());
-            for (int i=0; i< devices.size(); i++) {
+
+            for (int i = 0; i < devices.size(); i++) {
                 auto device = devices[i];
                 std::cout << "Device[" << i << "]: " << device.name << std::endl;
                 if (device.name.contains("IAC")) {
@@ -58,6 +77,20 @@ namespace juce {
         void
         unhandledException(const std::exception *exception, const String &sourceFilename, int lineNumber) override {
             std::cout << "Exception: " << exception << "; file: " << sourceFilename << ": " << lineNumber << std::endl;
+        }
+
+        void timerCallback() override {
+            std::cout << "Timer !!!\n";
+            auto devices = MidiOutput::getAvailableDevices();
+            std::cout << "Devices: " << devices.size() << std::endl;
+            for (int i = 0; i < devices.size(); i++) {
+                auto device = devices[i];
+                if (device.name.contains("IAC")) {
+                    auto msg = MidiMessage::noteOn(1, 10, .1f);
+                    std::cout << "Sending message...\n";
+                    this->midiOutput->sendMessageNow(msg);
+                }
+            }
         }
     };
 }
