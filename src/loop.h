@@ -8,7 +8,7 @@
 #include "Arduino_local.h"
 
 #define MY_LED 13
-namespace Loop {
+namespace theloop {
     void setup();
 
     void loop();

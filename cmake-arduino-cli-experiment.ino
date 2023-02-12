@@ -1,8 +1,8 @@
 #include "src/loop.h"
 void setup() {
-    Loop::setup();
+    theloop::setup();
 }
 
 void loop() {
-    Loop::loop();
+    theloop::loop();
 }

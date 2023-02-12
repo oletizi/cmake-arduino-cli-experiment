@@ -1,9 +1,9 @@
 #include "loop.h"
-void Loop::setup() {
+void theloop::setup() {
     pinMode(MY_LED, OUTPUT);
 }
 
-void Loop::loop() {
+void theloop::loop() {
     Serial.println("Going high...");
     digitalWrite(MY_LED, HIGH);
     delay(1000);
