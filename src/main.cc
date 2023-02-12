@@ -3,9 +3,13 @@
 #include <juce_audio_devices/juce_audio_devices.h>
 
 namespace juce {
+    using namespace std;
 
     class MyApp : public JUCEApplicationBase, public MidiInputCallback, Timer {
         std::unique_ptr<MidiOutput> midiOutput;
+        std::unique_ptr<MidiInput> midiInput;
+        String inputDeviceName = "Arturia KeyStep";
+        String outputDeviceName = "IAC";
 
     public:
         const String getApplicationName() { return "Thingy!"; }
@@ -19,84 +23,81 @@ namespace juce {
         }
 
         void handleIncomingMidiMessage(MidiInput *source, const MidiMessage &message) override {
-            std::cout << "Midi message!" << std::endl;
+            cout << "Midi message!" << endl;
+        }
+        void handlePartialSysexMessage (MidiInput* source,
+                                        const uint8* messageData,
+                                        int numBytesSoFar,
+                                        double timestamp) override {
+            cout << "Partial Sysex!" << endl;
         }
 
         void connectToOutput() {
             auto devices = MidiOutput::getAvailableDevices();
+            cout << "MIDI output device count: " << devices.size() << endl;
             for (int i = 0; i < devices.size(); i++) {
                 auto device = devices[i];
-                if (device.name.contains("IAC")) {
-                    std::cout << "Connecting to midi device: " << device.name << std::endl;
+                if (device.name.contains(this->outputDeviceName)) {
+                    cout << "Connecting to midi device: " << device.name << endl;
                     this->midiOutput = MidiOutput::openDevice(device.identifier);
+                    break;
+                }
+            }
+        }
+
+        void connectToInput() {
+            auto devices = MidiInput::getAvailableDevices();
+            cout << "MIDI input device count: " << devices.size() << endl;
+
+            for (int i = 0; i < devices.size(); i++) {
+                auto device = devices[i];
+                cout << "Midi input device[" << i << "]: " << device.name << endl;
+                if (device.name.contains(this->inputDeviceName)) {
+                    cout << "It's my device: " << this->inputDeviceName << ". Trying to connect!\n";
+                    this->midiInput = MidiInput::openDevice(device.identifier, this);
+                    cout << "Connected to " << this->midiInput->getName() << endl;
                 }
             }
         }
 
         void initialise(const String &commandLineParameters) override {
-            printf("Initializing!\n");
-            std::cout << "Starting timer...";
+            cout << "Initializing!\n";
+            cout << "Starting timer...\n";
             Timer::startTimer(1000);
-
+            connectToInput();
             connectToOutput();
-
-            auto devices = MidiInput::getAvailableDevices();
-            printf("Device count: %d\n", devices.size());
-
-            for (int i = 0; i < devices.size(); i++) {
-                auto device = devices[i];
-                std::cout << "Device[" << i << "]: " << device.name << std::endl;
-                if (device.name.contains("IAC")) {
-                    std::cout << "It's the IAC Driver!!! Trying to connect!\n";
-                    auto connected = MidiInput::openDevice(device.identifier, this);
-                    std::cout << "Connected to " << connected->getName() << std::endl;
-                }
-            }
         }
 
         void shutdown() override {
-            std::cout << "Shutting down.\n";
+            cout << "Shutting down.\n";
         }
 
         void anotherInstanceStarted(const String &commandLine) override {
-            std::cout << "Another instance started!\n";
+            cout << "Another instance started!\n";
         }
 
         void systemRequestedQuit() override {
-            std::cout << "System requested quit.\n";
+            cout << "System requested quit.\n";
         }
 
         void suspended() override {
-            std::cout << "Suspended.\n";
+            cout << "Suspended.\n";
         }
 
         void resumed() override {
-            std::cout << "Resumed.\n";
+            cout << "Resumed.\n";
         }
 
         void
         unhandledException(const std::exception *exception, const String &sourceFilename, int lineNumber) override {
-            std::cout << "Exception: " << exception << "; file: " << sourceFilename << ": " << lineNumber << std::endl;
+            cout << "Exception: " << exception << "; file: " << sourceFilename << ": " << lineNumber << endl;
         }
 
         void timerCallback() override {
-            std::cout << "Timer !!!\n";
-            auto devices = MidiOutput::getAvailableDevices();
-            std::cout << "Devices: " << devices.size() << std::endl;
-            for (int i = 0; i < devices.size(); i++) {
-                auto device = devices[i];
-                if (device.name.contains("IAC")) {
-                    auto msg = MidiMessage::noteOn(1, 10, .1f);
-                    std::cout << "Sending message...\n";
-                    this->midiOutput->sendMessageNow(msg);
-                }
-            }
+            auto msg = MidiMessage::noteOn(1, 10, .1f);
+            this->midiOutput->sendMessageNow(msg);
         }
     };
 }
 
-//int main(int argc, char *argv[]) {
-//    std::cout << "Hello, World!" << std::endl;
-//    return 0;
-//}
 START_JUCE_APPLICATION (juce::MyApp)
