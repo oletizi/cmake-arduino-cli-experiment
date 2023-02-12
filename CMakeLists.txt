@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(cmake_arduino_cli_experiment)
+project(cmake_arduino_cli_experiment VERSION 0.1)
 
 set(CMAKE_CXX_STANDARD 17)
 

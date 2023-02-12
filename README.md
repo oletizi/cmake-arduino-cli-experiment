@@ -17,3 +17,6 @@ Experiment with getting CMake and the Arduino CLI to play nice together.
 Helper scripts:
 * `bin/find-port.sh` &mdash; Uses `arduino-cli` to finds the serial port of the board. 
 * `bin/monitor.sh` &mdash; monitors output of the board's serial port
+
+## JUCE
+* [TeensyJuce](https://github.com/cutlasses/TeensyJuce)
