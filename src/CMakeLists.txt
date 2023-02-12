@@ -16,6 +16,6 @@ target_link_libraries(${BINARY}_run INTERFACE arduino-dummy)
 add_library(${BINARY}_lib STATIC ${SOURCES})
 target_link_libraries(${BINARY}_lib INTERFACE arduino-dummy)
 
-juce_add_console_app(thingy
+juce_add_console_app(${BINARY}_juce
         PRODUCT_NAME "thingy")
-target_sources(thingy PRIVATE ${SOURCES})
+target_sources(${BINARY}_juce PRIVATE ${SOURCES})
