@@ -9,13 +9,24 @@ set(SOURCES
         Arduino_local.h
         )
 
-add_executable(${BINARY}_run ${SOURCES})
-target_link_libraries(${BINARY}_run INTERFACE arduino-dummy)
+#add_executable(${BINARY}_run ${SOURCES})
+#target_link_libraries(${BINARY}_run INTERFACE arduino-dummy)
+#
+#
+#add_library(${BINARY}_lib STATIC ${SOURCES})
+#target_link_libraries(${BINARY}_lib INTERFACE arduino-dummy)
 
 
-add_library(${BINARY}_lib STATIC ${SOURCES})
-target_link_libraries(${BINARY}_lib INTERFACE arduino-dummy)
-
-juce_add_console_app(${BINARY}_juce
+set(JUCE_TARGET thingy)
+juce_add_console_app(${JUCE_TARGET}
         PRODUCT_NAME "thingy")
-target_sources(${BINARY}_juce PRIVATE ${SOURCES})
+target_sources(${JUCE_TARGET} PRIVATE ${SOURCES})
+target_link_libraries(${JUCE_TARGET}
+        PRIVATE
+        # ConsoleAppData            # If you'd created a binary data target, you'd link to it here
+        juce::juce_core
+        juce::juce_audio_devices
+        PUBLIC
+        juce::juce_recommended_config_flags
+        juce::juce_recommended_warning_flags)
+juce_generate_juce_header(thingy)
