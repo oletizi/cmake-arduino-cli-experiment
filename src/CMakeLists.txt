@@ -1,7 +1,6 @@
 set(BINARY ${CMAKE_PROJECT_NAME})
 
 set(SOURCES
-        main.cc
         loop.h
         loop.cpp
         display.h
@@ -13,14 +12,14 @@ set(SOURCES
 #target_link_libraries(${BINARY}_run INTERFACE arduino-dummy)
 #
 #
-#add_library(${BINARY}_lib STATIC ${SOURCES})
-#target_link_libraries(${BINARY}_lib INTERFACE arduino-dummy)
+add_library(${BINARY}_lib STATIC ${SOURCES})
+target_link_libraries(${BINARY}_lib INTERFACE arduino-dummy)
 
 
-set(JUCE_TARGET thingy)
 juce_add_console_app(${JUCE_TARGET}
-        PRODUCT_NAME "thingy")
-target_sources(${JUCE_TARGET} PRIVATE ${SOURCES})
+        PRODUCT_NAME ${JUCE_TARGET})
+
+target_sources(${JUCE_TARGET} PRIVATE main.cc ${SOURCES})
 target_link_libraries(${JUCE_TARGET}
         PRIVATE
         # ConsoleAppData            # If you'd created a binary data target, you'd link to it here
@@ -29,4 +28,4 @@ target_link_libraries(${JUCE_TARGET}
         PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_warning_flags)
-juce_generate_juce_header(thingy)
+juce_generate_juce_header(${JUCE_TARGET})

@@ -3,6 +3,9 @@ project(cmake_arduino_cli_experiment VERSION 0.1)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(JUCE_TARGET ${CMAKE_PROJECT_NAME}_juce)
+set(LIB_TARGET ${CMAKE_PROJECT_NAME}_lib)
+
 add_compile_definitions(TARGET_NATIVE)
 
 
