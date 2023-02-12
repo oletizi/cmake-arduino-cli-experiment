@@ -10,3 +10,9 @@
 [submodule "lib/JUCE"]
 	path = lib/JUCE
 	url = git@github.com:juce-framework/JUCE.git
+[submodule "lib/Audio"]
+	path = lib/Audio
+	url = git@github.com:PaulStoffregen/Audio.git
+[submodule "lib/MIDI"]
+	path = lib/MIDI
+	url = git@github.com:PaulStoffregen/MIDI.git

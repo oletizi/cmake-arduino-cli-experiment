@@ -23,7 +23,8 @@ namespace juce {
         }
 
         void handleIncomingMidiMessage(MidiInput *source, const MidiMessage &message) override {
-            cout << "Midi message!" << endl;
+            cout << "ch: " << message.getChannel();
+            cout << " type: " << message.getMetaEventType() << endl;
         }
         void handlePartialSysexMessage (MidiInput* source,
                                         const uint8* messageData,
