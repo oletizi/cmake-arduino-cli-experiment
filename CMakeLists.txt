@@ -14,9 +14,9 @@ set(TEST_TARGET ${CMAKE_PROJECT_NAME}_test)
 # when compiling on a native system.
 add_compile_definitions(TARGET_NATIVE)
 
-include_directories(src lib/arduino-dummy)
+#include_directories(src lib/arduino-dummy)
 
-add_subdirectory(lib/arduino-dummy)
+add_subdirectory(lib/libarduino-dummy)
 add_subdirectory(lib/googletest)
 add_subdirectory(lib/juce)
 add_subdirectory(src)

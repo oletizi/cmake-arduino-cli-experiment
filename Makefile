@@ -16,17 +16,20 @@ test: build
 .PHONY: test
 
 # build the juce target
-juce: cmake
+jucebuild: cmake
 	cd cmake && make $(PROJECT_NAME)_juce
-.PHONY: juce
+.PHONY: jucebuild
 
 # runs the juce program
-juce-run: juce
+juce-run: jucebuild
 	cd cmake && ./src/$(PROJECT_NAME)_juce_artefacts/$(PROJECT_NAME)_juce
 
+arduinobuild:
+	arduino-cli compile --library ./lib/libarduino-dummy/ ${FQBN} .
+.PHONY: arduinobuild
+
 # builds everything (arduino and native)
-build: juce
-	arduino-cli compile ${FQBN} .
+build: jucebuild arduinobuild
 .PHONY: build
 
 upload:

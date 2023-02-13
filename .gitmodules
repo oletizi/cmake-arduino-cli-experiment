@@ -5,7 +5,7 @@
 	path = lib/arduino-core
 	url = git@github.com:arduino/ArduinoCore-avr.git
 [submodule "lib/arduino-dummy"]
-	path = lib/arduino-dummy
+	path = lib/libarduino-dummy
 	url = git@github.com:oletizi/arduino-dummy.git
 [submodule "lib/JUCE"]
 	path = lib/juce

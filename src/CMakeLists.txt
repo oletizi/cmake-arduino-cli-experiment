@@ -13,7 +13,8 @@ set(SOURCES
 #
 #
 add_library(${LIB_TARGET} STATIC ${SOURCES})
-target_link_libraries(${LIB_TARGET} INTERFACE arduino-dummy)
+target_link_libraries(${LIB_TARGET} PUBLIC libarduino-dummy)
+target_include_directories(${LIB_TARGET} PUBLIC .)
 
 
 juce_add_console_app(${JUCE_TARGET}
@@ -27,5 +28,7 @@ target_link_libraries(${JUCE_TARGET}
         juce::juce_audio_devices
         PUBLIC
         juce::juce_recommended_config_flags
-        juce::juce_recommended_warning_flags)
+        juce::juce_recommended_warning_flags
+        libarduino-dummy
+        )
 juce_generate_juce_header(${JUCE_TARGET})
