@@ -1,7 +1,6 @@
 set(BINARY ${CMAKE_PROJECT_NAME})
 
 set(SOURCES
-        Arduino_local.h
         display.h
         display.cc
         loop.h
