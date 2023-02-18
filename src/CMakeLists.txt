@@ -1,10 +1,11 @@
 set(BINARY ${CMAKE_PROJECT_NAME})
 
 set(SOURCES
-        display.h
-        display.cc
+        display/display.h
+        display/display.cc
         loop.h
         loop.cpp
+        midi/midi.h
         )
 
 #add_executable(${BINARY}_run ${SOURCES})

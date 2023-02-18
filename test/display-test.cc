@@ -2,9 +2,9 @@
 // Created by Orion Letizi on 2/5/23.
 //
 #include <gtest/gtest.h>
-#include "display.h"
+#include "display/display.h"
 
-namespace oletizi::display {
+namespace thingy::display {
     TEST(DisplayTestSuite, TestBasics) {
         Display *d;
         d = new SerialDisplay();

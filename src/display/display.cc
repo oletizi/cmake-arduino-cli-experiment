@@ -4,7 +4,7 @@
 #include <iostream>
 #include "display.h"
 
-namespace oletizi::display {
+namespace thingy::display {
     void SerialDisplay::print(std::string msg) {
         std::cout << msg;
     }
