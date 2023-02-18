@@ -74,7 +74,9 @@ namespace juce {
 
         void timerCallback() override {
             auto msg = MidiMessage::noteOn(1, 10, .1f);
-            this->midiOutput->sendMessageNow(msg);
+            if (this->midiOutput) {
+                this->midiOutput->sendMessageNow(msg);
+            }
         }
     };
 }
