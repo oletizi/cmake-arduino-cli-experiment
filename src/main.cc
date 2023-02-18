@@ -7,8 +7,7 @@ namespace juce {
     using namespace std;
 
     class MyApp : public JUCEApplicationBase, Timer {
-        //unique_ptr<MidiOutput> midiOutput;
-        unique_ptr<MidiOutput> outputs[128] = {}; // this is just for experimentation.
+        vector<unique_ptr<MidiOutput>> outputs;
         thingy::midi::MidiBroker *midiInputCallback;
 
     public:
@@ -30,7 +29,8 @@ namespace juce {
                 cout << "Connecting to midi device: " << device.name << endl;
                 //this->midiOutput = MidiOutput::openDevice(device.identifier);
                 auto midiOutput = MidiOutput::openDevice(device.identifier);
-                outputs[i] = move(midiOutput);
+                //outputs[i] = move(midiOutput);
+                outputs.push_back(move(midiOutput));
             }
         }
 
@@ -71,9 +71,9 @@ namespace juce {
 
         void timerCallback() override {
             auto msg = MidiMessage::noteOn(1, 10, .1f);
-            for (int i=0; i<127; i++) {
-                if (this->outputs[i]) {
-                    this->outputs[i]->sendMessageNow(msg);
+            for (size_t i=0; i<outputs.size(); i++) {
+                if (this->outputs.at(i)) {
+                    this->outputs.at(i)->sendMessageNow(msg);
                 }
             }
         }

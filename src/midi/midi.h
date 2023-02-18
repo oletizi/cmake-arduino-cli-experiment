@@ -14,7 +14,8 @@ namespace thingy::midi {
 
     class MidiBroker : public MidiInputCallback {
         string name = "MidiBroker: ";
-        unique_ptr<MidiInput> inputs[128] = {};
+        //unique_ptr<MidiInput> inputs[128] = {};
+        vector<unique_ptr<MidiInput>> inputs;
     public:
         void connectToInput() {
             auto devices = MidiInput::getAvailableDevices();
@@ -27,13 +28,12 @@ namespace thingy::midi {
                 //inputs.add(midiInput);
                 cout << this->name << "Connected to " << midiInput->getName() << endl;
                 midiInput->start();
-                inputs[i] = move(midiInput);
+                inputs.push_back(move(midiInput));
             }
         }
 
         void handleIncomingMidiMessage(MidiInput *source, const MidiMessage &message) override {
             cout << this->name << "source: " << source->getName() << " ch: " << message.getChannel();
-            //cout << "; Desc: " << message.getDescription();
             if (message.isNoteOn()) {
                 cout << "; note on : " << message.getNoteNumber();
                 cout << "; velocity : " << (int) message.getVelocity();
