@@ -14,7 +14,7 @@ namespace thingy::midi {
 
     class MidiBroker : public MidiInputCallback {
         string name = "MidiBroker: ";
-        std::unique_ptr<MidiInput> inputs[128] = {};
+        unique_ptr<MidiInput> inputs[128] = {};
     public:
         void connectToInput() {
             auto devices = MidiInput::getAvailableDevices();

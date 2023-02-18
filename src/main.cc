@@ -7,10 +7,8 @@ namespace juce {
     using namespace std;
 
     class MyApp : public JUCEApplicationBase, Timer {
-        std::unique_ptr<MidiOutput> midiOutput;
-        std::unique_ptr<MidiInput> midiInput;
-        String inputDeviceName = "Arturia KeyStep";
-        String outputDeviceName = "IAC";
+        //unique_ptr<MidiOutput> midiOutput;
+        unique_ptr<MidiOutput> outputs[128] = {}; // this is just for experimentation.
         thingy::midi::MidiBroker *midiInputCallback;
 
     public:
@@ -29,11 +27,10 @@ namespace juce {
             cout << "MIDI output device count: " << devices.size() << endl;
             for (int i = 0; i < devices.size(); i++) {
                 auto device = devices[i];
-                if (device.name.contains(this->outputDeviceName)) {
-                    cout << "Connecting to midi device: " << device.name << endl;
-                    this->midiOutput = MidiOutput::openDevice(device.identifier);
-                    break;
-                }
+                cout << "Connecting to midi device: " << device.name << endl;
+                //this->midiOutput = MidiOutput::openDevice(device.identifier);
+                auto midiOutput = MidiOutput::openDevice(device.identifier);
+                outputs[i] = move(midiOutput);
             }
         }
 
@@ -74,8 +71,10 @@ namespace juce {
 
         void timerCallback() override {
             auto msg = MidiMessage::noteOn(1, 10, .1f);
-            if (this->midiOutput) {
-                this->midiOutput->sendMessageNow(msg);
+            for (int i=0; i<127; i++) {
+                if (this->outputs[i]) {
+                    this->outputs[i]->sendMessageNow(msg);
+                }
             }
         }
     };
