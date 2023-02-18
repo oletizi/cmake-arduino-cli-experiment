@@ -1,6 +1,7 @@
 #include <iostream>
 #include <juce_core/juce_core.h>
 #include <juce_audio_devices/juce_audio_devices.h>
+#include "midi/midi.h"
 
 namespace juce {
     using namespace std;
