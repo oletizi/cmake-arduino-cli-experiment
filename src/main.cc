@@ -6,32 +6,22 @@
 namespace juce {
     using namespace std;
 
-    class MyApp : public JUCEApplicationBase, public MidiInputCallback, Timer {
+    class MyApp : public JUCEApplicationBase, Timer {
         std::unique_ptr<MidiOutput> midiOutput;
         std::unique_ptr<MidiInput> midiInput;
         String inputDeviceName = "Arturia KeyStep";
         String outputDeviceName = "IAC";
+        thingy::midi::MidiBroker *midiInputCallback;
 
     public:
-        const String getApplicationName() { return "Thingy!"; }
+        const String getApplicationName() override { return "Thingy!"; }
 
-        const String getApplicationVersion() { return "0.1"; }
+        const String getApplicationVersion() override { return "0.1"; }
 
-        bool moreThanOneInstanceAllowed() { return false; }
+        bool moreThanOneInstanceAllowed() override { return false; }
 
         ~MyApp() override {
             std::cout << "Destructor.\n";
-        }
-
-        void handleIncomingMidiMessage(MidiInput *source, const MidiMessage &message) override {
-            cout << "ch: " << message.getChannel();
-            cout << " type: " << message.getMetaEventType() << endl;
-        }
-        void handlePartialSysexMessage (MidiInput* source,
-                                        const uint8* messageData,
-                                        int numBytesSoFar,
-                                        double timestamp) override {
-            cout << "Partial Sysex!" << endl;
         }
 
         void connectToOutput() {
@@ -47,28 +37,14 @@ namespace juce {
             }
         }
 
-        void connectToInput() {
-            auto devices = MidiInput::getAvailableDevices();
-            cout << "MIDI input device count: " << devices.size() << endl;
-
-            for (int i = 0; i < devices.size(); i++) {
-                auto device = devices[i];
-                cout << "Midi input device[" << i << "]: " << device.name << endl;
-                if (device.name.contains(this->inputDeviceName)) {
-                    cout << "It's my device: " << this->inputDeviceName << ". Trying to connect!\n";
-                    this->midiInput = MidiInput::openDevice(device.identifier, this);
-                    this->midiInput->start();
-                    cout << "Connected to " << this->midiInput->getName() << endl;
-                }
-            }
-        }
-
         void initialise(const String &commandLineParameters) override {
             cout << "Initializing!\n";
+            cout << "cmdline: " << commandLineParameters << endl;
             cout << "Starting timer...\n";
             Timer::startTimer(1000);
-            connectToInput();
             connectToOutput();
+            midiInputCallback = new thingy::midi::MidiBroker();
+            midiInputCallback->connectToInput();
         }
 
         void shutdown() override {
@@ -76,7 +52,7 @@ namespace juce {
         }
 
         void anotherInstanceStarted(const String &commandLine) override {
-            cout << "Another instance started!\n";
+            cout << "Another instance started! commandLine: " << commandLine << endl;
         }
 
         void systemRequestedQuit() override {
