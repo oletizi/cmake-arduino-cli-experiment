@@ -21,7 +21,7 @@ namespace juce {
             std::cout << "Destructor.\n";
         }
 
-        void connectToOutput() {
+        void connectToOutputs() {
             auto devices = MidiOutput::getAvailableDevices();
             cout << "MIDI output device count: " << devices.size() << endl;
             for (int i = 0; i < devices.size(); i++) {
@@ -39,9 +39,9 @@ namespace juce {
             cout << "cmdline: " << commandLineParameters << endl;
             cout << "Starting timer...\n";
             Timer::startTimer(1000);
-            connectToOutput();
+            connectToOutputs();
             midiInputCallback = new thingy::midi::MidiBroker();
-            midiInputCallback->connectToInput();
+            midiInputCallback->connectToInputs();
         }
 
         void shutdown() override {
