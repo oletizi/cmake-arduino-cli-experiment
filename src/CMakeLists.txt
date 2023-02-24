@@ -6,6 +6,7 @@ set(SOURCES
         loop.h
         loop.cpp
         midi/midi.h
+        synth/synth.h
         )
 
 #add_executable(${BINARY}_run ${SOURCES})

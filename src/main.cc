@@ -2,13 +2,14 @@
 #include <juce_core/juce_core.h>
 #include <juce_audio_devices/juce_audio_devices.h>
 #include "midi/midi.h"
+#include "synth/synth.h"
 
 namespace juce {
     using namespace std;
 
     class MyApp : public JUCEApplicationBase, Timer {
         vector<unique_ptr<MidiOutput>> outputs;
-        thingy::midi::MidiBroker *midiInputCallback;
+        thingy::midi::MidiBroker *midiBroker;
 
     public:
         const String getApplicationName() override { return "Thingy!"; }
@@ -38,10 +39,12 @@ namespace juce {
             cout << "Initializing!\n";
             cout << "cmdline: " << commandLineParameters << endl;
             cout << "Starting timer...\n";
-            Timer::startTimer(1000);
+            //Timer::startTimer(1000);
             connectToOutputs();
-            midiInputCallback = new thingy::midi::MidiBroker();
-            midiInputCallback->connectToInputs();
+            midiBroker = new thingy::midi::MidiBroker();
+            midiBroker->connectToInputs();
+
+            auto synth = new thingy::synth::Synth(midiBroker);
         }
 
         void shutdown() override {
