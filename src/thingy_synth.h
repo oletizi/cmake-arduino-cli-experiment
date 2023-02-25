@@ -8,11 +8,11 @@
 #include <iostream>
 #include "thingy_midi.h"
 
-namespace thingy::synth {
+namespace thingy {
 
     class Synth {
     public:
-        explicit Synth(thingy::midi::MidiBroker *midiBroker) {
+        explicit Synth(thingy::MidiBroker *midiBroker) {
             std::cout << "Synth: MidiBroker: " << midiBroker;
         }
     };

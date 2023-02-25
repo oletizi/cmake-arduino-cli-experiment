@@ -9,7 +9,7 @@ namespace juce {
 
     class MyApp : public JUCEApplicationBase, Timer {
         vector<unique_ptr<MidiOutput>> outputs;
-        thingy::midi::MidiBroker *midiBroker;
+        thingy::MidiBroker *midiBroker;
 
     public:
         const String getApplicationName() override { return "Thingy!"; }
@@ -41,10 +41,10 @@ namespace juce {
             cout << "Starting timer...\n";
             //Timer::startTimer(1000);
             connectToOutputs();
-            midiBroker = new thingy::midi::MidiBroker();
+            midiBroker = new thingy::MidiBroker();
             midiBroker->connectToInputs();
 
-            auto synth = new thingy::synth::Synth(midiBroker);
+            auto synth = new thingy::Synth(midiBroker);
         }
 
         void shutdown() override {

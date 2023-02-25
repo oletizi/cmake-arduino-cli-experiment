@@ -11,7 +11,7 @@
 #include <juce_audio_devices/juce_audio_devices.h>
 
 
-namespace thingy::midi {
+namespace thingy {
     using namespace std;
     using namespace juce;
 
