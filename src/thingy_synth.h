@@ -2,11 +2,11 @@
 // Created by Orion Letizi on 2/22/23.
 //
 
-#ifndef THINGY_SYNTH_H
-#define THINGY_SYNTH_H
+#ifndef THINGY_THINGY_SYNTH_H
+#define THINGY_THINGY_SYNTH_H
 
 #include <iostream>
-#include "../midi/midi.h"
+#include "thingy_midi.h"
 
 namespace thingy::synth {
 
@@ -17,4 +17,4 @@ namespace thingy::synth {
         }
     };
 }
-#endif //THINGY_SYNTH_H
+#endif //THINGY_THINGY_SYNTH_H

@@ -1,8 +1,8 @@
 //
 // Created by Orion Letizi on 2/13/23.
 //
-#ifndef THINGY_MIDI_H
-#define THINGY_MIDI_H
+#ifndef THINGY_THINGY_MIDI_H
+#define THINGY_THINGY_MIDI_H
 
 #ifdef TARGET_NATIVE
 
@@ -65,4 +65,4 @@ namespace thingy::midi {
 #else // Arduino implementation
 // Implement Me!
 #endif //TARGET_NATIVE
-#endif //THINGY_MIDI_H
+#endif //THINGY_THINGY_MIDI_H
