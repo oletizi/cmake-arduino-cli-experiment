@@ -9,6 +9,7 @@
 #include <iostream>
 #include <juce_core/juce_core.h>
 #include <juce_audio_devices/juce_audio_devices.h>
+#include "thingy_defs.h"
 
 
 namespace thingy {
@@ -37,7 +38,7 @@ namespace thingy {
 
         // Handle incoming midi messages and dispatch them to callbacks
         void handleIncomingMidiMessage(juce::MidiInput *source, const juce::MidiMessage &message) override {
-            byte channel = (byte) message.getChannel();
+            auto channel = message.getChannel();
             cout << this->name << "source: " << source->getName() << " ch: " << message.getChannel();
             if (message.isNoteOn()) {
                 cout << "; note on : " << message.getNoteNumber();

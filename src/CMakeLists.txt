@@ -1,11 +1,13 @@
 set(BINARY ${CMAKE_PROJECT_NAME})
 
 set(SOURCES
-        thingy_display.h
-        thingy_display.cc
         loop.h
         loop.cpp
+        thingy_defs.h
+        thingy_display.h
+        thingy_display.cc
         thingy_midi.h
+        thingy_midi_message.h
         thingy_synth.h
         )
 
@@ -13,9 +15,6 @@ set(SOURCES
 #target_link_libraries(${BINARY}_run INTERFACE arduino-dummy)
 #
 #
-add_library(${LIB_TARGET} STATIC ${SOURCES})
-target_link_libraries(${LIB_TARGET} PUBLIC libarduino-dummy)
-target_include_directories(${LIB_TARGET} PUBLIC .)
 
 
 juce_add_console_app(${JUCE_TARGET}
@@ -33,3 +32,14 @@ target_link_libraries(${JUCE_TARGET}
         libarduino-dummy
         )
 juce_generate_juce_header(${JUCE_TARGET})
+
+add_library(${LIB_TARGET} STATIC ${SOURCES})
+target_link_libraries(${LIB_TARGET}
+        PUBLIC
+        juce::juce_core
+        juce::juce_audio_devices
+        juce::juce_recommended_config_flags
+        juce::juce_recommended_warning_flags
+        libarduino-dummy
+        )
+target_include_directories(${LIB_TARGET} PUBLIC .)
