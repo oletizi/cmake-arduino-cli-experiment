@@ -11,18 +11,18 @@ namespace thingy {
         EXPECT_EQ(m.channel, 0);
     }
 
-//    class MockMidiListener : MidiListener {
-//        void handleMessage(ThingyMidiMessage message) override;
-//    };
-//
-//    void MockMidiListener::handleMessage(ThingyMidiMessage message) {}
-//
-//    TEST(MidiTestSuite, TestMidiBroker) {
-//        auto b = new MidiBroker();
-//        juce::MidiInput *source = nullptr;
-//        juce::MidiMessage juceMessage;
-//        MockMidiListener mockListener;
-//        b->addMidiListener(&mockListener);
-//        b->handleIncomingMidiMessage(source, juceMessage);
-//    }
+    class MockMidiListener : public ThingyMidiListener {
+        void handleMessage(ThingyMidiMessage message) override;
+    };
+
+    void MockMidiListener::handleMessage(ThingyMidiMessage message) {}
+
+    TEST(MidiTestSuite, TestMidiBroker) {
+        auto b = new MidiBroker();
+        juce::MidiInput *source = nullptr;
+        juce::MidiMessage juceMessage;
+        MockMidiListener mockListener;
+        b->addMidiListener(&mockListener);
+        b->handleIncomingMidiMessage(source, juceMessage);
+    }
 }
