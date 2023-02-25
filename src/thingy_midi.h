@@ -13,22 +13,21 @@
 
 namespace thingy {
     using namespace std;
-    using namespace juce;
 
-    class MidiBroker : public MidiInputCallback {
+    class MidiBroker : public juce::MidiInputCallback {
         string name = "MidiBroker: ";
-        vector<unique_ptr<MidiInput>> inputs;
+        vector<unique_ptr<juce::MidiInput>> inputs;
 
     public:
         // Connect to all the available midi inputs
         void connectToInputs() {
-            auto devices = MidiInput::getAvailableDevices();
+            auto devices = juce::MidiInput::getAvailableDevices();
             cout << this->name << "MIDI input device count: " << devices.size() << endl;
             for (int i = 0; i < devices.size(); i++) {
                 auto device = devices[i];
                 cout << this->name << "Midi input device[" << i << "]: " << device.name << endl;
 
-                auto midiInput = MidiInput::openDevice(device.identifier, this);
+                auto midiInput = juce::MidiInput::openDevice(device.identifier, this);
                 //inputs.add(midiInput);
                 cout << this->name << "Connected to " << midiInput->getName() << endl;
                 midiInput->start();
@@ -37,7 +36,7 @@ namespace thingy {
         }
 
         // Handle incoming midi messages and dispatch them to callbacks
-        void handleIncomingMidiMessage(MidiInput *source, const MidiMessage &message) override {
+        void handleIncomingMidiMessage(juce::MidiInput *source, const juce::MidiMessage &message) override {
             byte channel = (byte) message.getChannel();
             cout << this->name << "source: " << source->getName() << " ch: " << message.getChannel();
             if (message.isNoteOn()) {
@@ -51,8 +50,8 @@ namespace thingy {
             cout << endl;
         }
 
-        void handlePartialSysexMessage(MidiInput *source,
-                                       const uint8 *messageData,
+        void handlePartialSysexMessage(juce::MidiInput *source,
+                                       const juce::uint8 *messageData,
                                        int numBytesSoFar,
                                        double timestamp) override {
             cout << this->name << "Partial Sysex! source: " << source << "; data: " << messageData;
