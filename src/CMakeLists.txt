@@ -7,8 +7,6 @@ set(SOURCES
         thingy_display.h
         thingy_display.cc
         thingy_midi.h
-        thingy_midi_listener.h
-        thingy_midi_message.h
         thingy_synth.h
         )
 

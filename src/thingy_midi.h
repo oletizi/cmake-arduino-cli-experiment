@@ -11,15 +11,29 @@
 #include <juce_audio_devices/juce_audio_devices.h>
 #include "thingy_defs.h"
 
-
 namespace thingy {
     using namespace std;
+
+    struct ThingyMidiMessage {
+        Channel channel;
+    };
+
+    class ThingyMidiListener {
+    public:
+        virtual void handleMessage(ThingyMidiMessage message) = 0;
+    };
 
     class MidiBroker : public juce::MidiInputCallback {
         string name = "MidiBroker: ";
         vector<unique_ptr<juce::MidiInput>> inputs;
+        set<ThingyMidiListener *> listeners;
 
     public:
+
+        void addMidiListener(ThingyMidiListener *listener) {
+            this->listeners.insert(listener);
+        }
+
         // Connect to all the available midi inputs
         void connectToInputs() {
             auto devices = juce::MidiInput::getAvailableDevices();
@@ -64,4 +78,5 @@ namespace thingy {
 #else // Arduino implementation
 // Implement Me!
 #endif //TARGET_NATIVE
+
 #endif //THINGY_THINGY_MIDI_H
