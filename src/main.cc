@@ -10,7 +10,6 @@ namespace juce {
     class MyApp : public JUCEApplicationBase, Timer {
         vector<unique_ptr<MidiOutput>> outputs;
         thingy::MidiBroker *midiBroker;
-
     public:
         const String getApplicationName() override { return "Thingy!"; }
 
@@ -44,7 +43,7 @@ namespace juce {
             midiBroker = new thingy::MidiBroker();
             midiBroker->connectToInputs();
 
-            auto synth = new thingy::Synth(midiBroker);
+            new thingy::Synth(midiBroker->getMidiPublisher());
         }
 
         void shutdown() override {

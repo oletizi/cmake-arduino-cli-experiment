@@ -12,17 +12,19 @@ namespace thingy {
     }
 
     class MockMidiListener : public ThingyMidiListener {
-        void handleMessage(ThingyMidiMessage message) override;
+    public:
+        std::vector<ThingyMidiMessage> handleMessageCalls;
+        void handleMessage(ThingyMidiMessage message) override {
+            this->handleMessageCalls.push_back(message);
+        }
     };
 
-    void MockMidiListener::handleMessage(ThingyMidiMessage message) {}
-
-    TEST(MidiTestSuite, TestMidiBroker) {
-        auto b = new MidiBroker();
-        juce::MidiInput *source = nullptr;
-        juce::MidiMessage juceMessage;
-        MockMidiListener mockListener;
-        b->addMidiListener(&mockListener);
-        b->handleIncomingMidiMessage(source, juceMessage);
+    TEST(MidiTestSuite, TestMidiPublisher) {
+        auto *publisher = new ThingyMidiPublisher();
+        ThingyMidiMessage message = {};
+        auto listener = new MockMidiListener();
+        publisher->addMidiListener(listener);
+        publisher->onMidiMessage(message);
+        EXPECT_EQ(1, listener->handleMessageCalls.size());
     }
 }

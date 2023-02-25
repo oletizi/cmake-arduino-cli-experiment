@@ -10,11 +10,14 @@
 
 namespace thingy {
 
-    class Synth {
+    class Synth : public ThingyMidiListener {
     public:
-        explicit Synth(thingy::MidiBroker *midiBroker) {
-            std::cout << "Synth: MidiBroker: " << midiBroker;
+        explicit Synth(thingy::ThingyMidiPublisher *midiPublisher) {
+            std::cout << "Synth: MidiBroker: " << midiPublisher;
+            midiPublisher->addMidiListener(this);
         }
+
+        void handleMessage(ThingyMidiMessage message) override;
     };
 }
 #endif //THINGY_THINGY_SYNTH_H

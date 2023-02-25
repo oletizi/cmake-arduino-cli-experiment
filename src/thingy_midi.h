@@ -3,17 +3,8 @@
 //
 #ifndef THINGY_THINGY_MIDI_H
 #define THINGY_THINGY_MIDI_H
-
-#ifdef TARGET_NATIVE
-
-#include <iostream>
-#include <juce_core/juce_core.h>
-#include <juce_audio_devices/juce_audio_devices.h>
 #include "thingy_defs.h"
-
 namespace thingy {
-    using namespace std;
-
     struct ThingyMidiMessage {
         Channel channel;
     };
@@ -23,17 +14,44 @@ namespace thingy {
         virtual void handleMessage(ThingyMidiMessage message) = 0;
     };
 
+    class ThingyMidiPublisher {
+        //std::set<ThingyMidiListener *> listeners;
+        ThingyMidiListener *listeners[128] = {}; // TODO: figure out how to use a real data structure in Arduino
+        int count = 0;
+    public:
+        void addMidiListener(ThingyMidiListener *listener) {
+            //this->listeners.insert(listener);
+            this->listeners[count++] = listener;
+        }
+        void onMidiMessage(ThingyMidiMessage message) {
+            // TODO: Implement Me!
+            for (int i =0; i<this->count; i++) {
+                auto listener = listeners[i];
+                std::cout << "Listener: " << listener << std::endl;
+                listeners[i]->handleMessage(message);
+            }
+        }
+    };
+
+}
+#ifdef TARGET_NATIVE
+
+#include <iostream>
+#include <juce_core/juce_core.h>
+#include <juce_audio_devices/juce_audio_devices.h>
+
+namespace thingy {
+    using namespace std;
+
     class MidiBroker : public juce::MidiInputCallback {
         string name = "MidiBroker: ";
         vector<unique_ptr<juce::MidiInput>> inputs;
-        set<ThingyMidiListener *> listeners;
+        ThingyMidiPublisher midiPublisher;
 
     public:
-
-        void addMidiListener(ThingyMidiListener *listener) {
-            this->listeners.insert(listener);
+        ThingyMidiPublisher* getMidiPublisher() {
+            return &midiPublisher;
         }
-
         // Connect to all the available midi inputs
         void connectToInputs() {
             auto devices = juce::MidiInput::getAvailableDevices();
@@ -62,6 +80,8 @@ namespace thingy {
                 cout << "; note off: " << message.getNoteNumber();
             }
             cout << endl;
+            ThingyMidiMessage thingyMessage {};
+            this->midiPublisher.onMidiMessage(thingyMessage);
         }
 
         void handlePartialSysexMessage(juce::MidiInput *source,

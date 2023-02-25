@@ -8,6 +8,7 @@ set(SOURCES
         thingy_display.cc
         thingy_midi.h
         thingy_synth.h
+        thingy_synth.cpp
         )
 
 juce_add_console_app(${JUCE_TARGET}
