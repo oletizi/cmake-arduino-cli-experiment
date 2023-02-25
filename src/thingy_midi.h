@@ -38,7 +38,6 @@ namespace thingy {
 
         // Handle incoming midi messages and dispatch them to callbacks
         void handleIncomingMidiMessage(juce::MidiInput *source, const juce::MidiMessage &message) override {
-            auto channel = message.getChannel();
             cout << this->name << "source: " << source->getName() << " ch: " << message.getChannel();
             if (message.isNoteOn()) {
                 cout << "; note on : " << message.getNoteNumber();

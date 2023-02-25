@@ -7,15 +7,10 @@ set(SOURCES
         thingy_display.h
         thingy_display.cc
         thingy_midi.h
+        thingy_midi_listener.h
         thingy_midi_message.h
         thingy_synth.h
         )
-
-#add_executable(${BINARY}_run ${SOURCES})
-#target_link_libraries(${BINARY}_run INTERFACE arduino-dummy)
-#
-#
-
 
 juce_add_console_app(${JUCE_TARGET}
         PRODUCT_NAME ${JUCE_TARGET})
