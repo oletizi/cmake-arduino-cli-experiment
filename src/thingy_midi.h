@@ -11,16 +11,14 @@ namespace thingy {
 
     class ThingyMidiListener {
     public:
-        virtual void handleMessage(ThingyMidiMessage message) = 0;
+        virtual void onMidiMessage(ThingyMidiMessage message) = 0;
     };
 
     class ThingyMidiPublisher {
-        //std::set<ThingyMidiListener *> listeners;
         ThingyMidiListener *listeners[128] = {}; // TODO: figure out how to use a real data structure in Arduino
         int count = 0;
     public:
         void addMidiListener(ThingyMidiListener *listener) {
-            //this->listeners.insert(listener);
             this->listeners[count++] = listener;
         }
         void onMidiMessage(ThingyMidiMessage message) {
@@ -28,7 +26,7 @@ namespace thingy {
             for (int i =0; i<this->count; i++) {
                 auto listener = listeners[i];
                 std::cout << "Listener: " << listener << std::endl;
-                listeners[i]->handleMessage(message);
+                listeners[i]->onMidiMessage(message);
             }
         }
     };

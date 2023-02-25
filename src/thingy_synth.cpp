@@ -3,6 +3,6 @@
 //
 #include "thingy_synth.h"
 
-void thingy::Synth::handleMessage(ThingyMidiMessage message) {
+void thingy::Synth::onMidiMessage(ThingyMidiMessage message) {
     std::cout << "Synth handling a message !!!\n";
 }

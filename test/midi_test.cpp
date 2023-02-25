@@ -14,7 +14,7 @@ namespace thingy {
     class MockMidiListener : public ThingyMidiListener {
     public:
         std::vector<ThingyMidiMessage> handleMessageCalls;
-        void handleMessage(ThingyMidiMessage message) override {
+        void onMidiMessage(ThingyMidiMessage message) override {
             this->handleMessageCalls.push_back(message);
         }
     };

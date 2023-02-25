@@ -17,7 +17,7 @@ namespace thingy {
             midiPublisher->addMidiListener(this);
         }
 
-        void handleMessage(ThingyMidiMessage message) override;
+        void onMidiMessage(ThingyMidiMessage message) override;
     };
 }
 #endif //THINGY_THINGY_SYNTH_H
