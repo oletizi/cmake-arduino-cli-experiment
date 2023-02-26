@@ -1,51 +1,12 @@
 #include <iostream>
 #include <juce_core/juce_core.h>
 #include <juce_audio_devices/juce_audio_devices.h>
+#include "thingy_audio.h"
 #include "thingy_midi.h"
 #include "thingy_synth.h"
 
 namespace juce {
     using namespace std;
-
-    class MyAudioCallback : public AudioIODeviceCallback {
-        string myDeviceName = "";
-        const Time initTime = Time::getCurrentTime();
-        Time checkpoint = Time::getCurrentTime();
-        int count = 0;
-    public:
-        explicit MyAudioCallback(const string &deviceName) {
-            myDeviceName = deviceName;
-        }
-
-        void audioDeviceAboutToStart(AudioIODevice *device) override {
-            cout << "Device about to start: " << device->getName() << endl;
-            const BigInteger &integer = device->getActiveOutputChannels();
-            cout << "Active Output channels: " << integer.toString(10, 1) << endl;
-            int initSeconds = initTime.getSeconds();
-            cout << "initSeconds: " << initSeconds << endl;
-        }
-
-        void audioDeviceIOCallbackWithContext(const float *const *inputChannelData,
-                                              int numInputChannels,
-                                              float *const *outputChannelData,
-                                              int numOutputChannels,
-                                              int numSamples,
-                                              const AudioIODeviceCallbackContext &context) override {
-            count++;
-            auto now = Time::getCurrentTime();
-            if (now.toMilliseconds() - this->checkpoint.toMilliseconds() > 5000) {
-                cout << this->myDeviceName << " CHECKPOINT" << endl;
-                cout << "  input channels: " << numInputChannels << endl;
-                cout << "  output channels: " << numOutputChannels << "; sample count: " << numSamples << endl;
-                count = 0;
-                this->checkpoint = now;
-            }
-        }
-
-        void audioDeviceStopped() override {
-            cout << "Device stopped!";
-        }
-    };
 
     class MyApp : public JUCEApplicationBase, Timer {
         vector<unique_ptr<MidiOutput>> outputs;
@@ -112,7 +73,7 @@ namespace juce {
                     auto audioCallback = new MyAudioCallback(deviceName.toStdString());
                     this->audioCallbacks.push_back(audioCallback);
                     audioDevice->start(audioCallback);
-                    cout << "  Started device.";
+                    cout << "  Started device." << endl;
                 }
             }
 

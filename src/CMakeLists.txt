@@ -3,6 +3,7 @@ set(BINARY ${CMAKE_PROJECT_NAME})
 set(SOURCES
         loop.h
         loop.cpp
+        thingy_audio.h
         thingy_defs.h
         thingy_display.h
         thingy_display.cc
