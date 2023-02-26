@@ -8,10 +8,15 @@ namespace juce {
     using namespace std;
 
     class MyAudioCallback : public AudioIODeviceCallback {
+        string myDeviceName = "";
         const Time initTime = Time::getCurrentTime();
         Time checkpoint = Time::getCurrentTime();
-        int count;
+        int count = 0;
     public:
+        explicit MyAudioCallback(const string &deviceName) {
+            myDeviceName = deviceName;
+        }
+
         void audioDeviceAboutToStart(AudioIODevice *device) override {
             cout << "Device about to start: " << device->getName() << endl;
             const BigInteger &integer = device->getActiveOutputChannels();
@@ -28,9 +33,10 @@ namespace juce {
                                               const AudioIODeviceCallbackContext &context) override {
             count++;
             auto now = Time::getCurrentTime();
-            if (now.toMilliseconds() - this->checkpoint.toMilliseconds() > 1000) {
-                cout << "output channels: " << numOutputChannels << "; sample count: " << numSamples << endl;
-                cout << "CHECKPOINT > 1000; count: " << count << endl;
+            if (now.toMilliseconds() - this->checkpoint.toMilliseconds() > 5000) {
+                cout << this->myDeviceName << " CHECKPOINT" << endl;
+                cout << "  input channels: " << numInputChannels << endl;
+                cout << "  output channels: " << numOutputChannels << "; sample count: " << numSamples << endl;
                 count = 0;
                 this->checkpoint = now;
             }
@@ -43,6 +49,7 @@ namespace juce {
 
     class MyApp : public JUCEApplicationBase, Timer {
         vector<unique_ptr<MidiOutput>> outputs;
+        vector<MyAudioCallback *> audioCallbacks;
         thingy::MidiBroker *midiBroker;
     public:
         const String getApplicationName() override { return "Thingy!"; }
@@ -78,7 +85,7 @@ namespace juce {
             midiBroker = new thingy::MidiBroker();
             midiBroker->connectToInputs();
 
-            auto audioCallback = new MyAudioCallback();
+            //auto audioCallback = new MyAudioCallback("whee");
             auto adm = juce::AudioDeviceManager();
             const OwnedArray<AudioIODeviceType> &deviceTypes = adm.getAvailableDeviceTypes();
             cout << "Audio device types: size: " << deviceTypes.size() << endl;
@@ -93,11 +100,19 @@ namespace juce {
                 cout << "Device name count: " << stringArray.size() << endl;
                 for (const auto &deviceName: stringArray) {
                     cout << deviceName << endl;
-                    cout << "Creating device named " << deviceName << endl;
+                    cout << "  Creating device named " << deviceName << endl;
                     AudioIODevice *audioDevice = deviceType->createDevice(deviceName, "");
-                    cout << "Created audio device: " << audioDevice->getName() << ": " << audioDevice << endl;
+                    cout << "  Created audio device: " << audioDevice->getName() << ": " << audioDevice << endl;
 
+                    cout << "  Opening device..." << endl;
+                    const String &open = audioDevice->open(0, 2, 48000, 512);
+                    cout << "  RV: " << open << endl;
+
+                    cout << "  Starting device..." << endl;
+                    auto audioCallback = new MyAudioCallback(deviceName.toStdString());
+                    this->audioCallbacks.push_back(audioCallback);
                     audioDevice->start(audioCallback);
+                    cout << "  Started device.";
                 }
             }
 
