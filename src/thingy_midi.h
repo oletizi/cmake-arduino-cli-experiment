@@ -19,10 +19,9 @@ namespace thingy {
         int count = 0;
     public:
         void addMidiListener(ThingyMidiListener *listener) {
-            this->listeners[count++] = listener;
+            this->listeners[count++] = listener; // XXX: this will fail if there are more than 128 listeners.
         }
         void onMidiMessage(ThingyMidiMessage message) {
-            // TODO: Implement Me!
             for (int i =0; i<this->count; i++) {
                 auto listener = listeners[i];
                 std::cout << "Listener: " << listener << std::endl;

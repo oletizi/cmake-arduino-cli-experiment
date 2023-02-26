@@ -7,6 +7,40 @@
 namespace juce {
     using namespace std;
 
+    class MyAudioCallback : public AudioIODeviceCallback {
+        const Time initTime = Time::getCurrentTime();
+        Time checkpoint = Time::getCurrentTime();
+        int count;
+    public:
+        void audioDeviceAboutToStart(AudioIODevice *device) override {
+            cout << "Device about to start: " << device->getName() << endl;
+            const BigInteger &integer = device->getActiveOutputChannels();
+            cout << "Active Output channels: " << integer.toString(10, 1) << endl;
+            int initSeconds = initTime.getSeconds();
+            cout << "initSeconds: " << initSeconds << endl;
+        }
+
+        void audioDeviceIOCallbackWithContext(const float *const *inputChannelData,
+                                              int numInputChannels,
+                                              float *const *outputChannelData,
+                                              int numOutputChannels,
+                                              int numSamples,
+                                              const AudioIODeviceCallbackContext &context) override {
+            count++;
+            auto now = Time::getCurrentTime();
+            if (now.toMilliseconds() - this->checkpoint.toMilliseconds() > 1000) {
+                cout << "output channels: " << numOutputChannels << "; sample count: " << numSamples << endl;
+                cout << "CHECKPOINT > 1000; count: " << count << endl;
+                count = 0;
+                this->checkpoint = now;
+            }
+        }
+
+        void audioDeviceStopped() override {
+            cout << "Device stopped!";
+        }
+    };
+
     class MyApp : public JUCEApplicationBase, Timer {
         vector<unique_ptr<MidiOutput>> outputs;
         thingy::MidiBroker *midiBroker;
@@ -22,6 +56,7 @@ namespace juce {
         }
 
         void connectToOutputs() {
+
             auto devices = MidiOutput::getAvailableDevices();
             cout << "MIDI output device count: " << devices.size() << endl;
             for (int i = 0; i < devices.size(); i++) {
@@ -42,6 +77,32 @@ namespace juce {
             connectToOutputs();
             midiBroker = new thingy::MidiBroker();
             midiBroker->connectToInputs();
+
+            auto audioCallback = new MyAudioCallback();
+            auto adm = juce::AudioDeviceManager();
+            const OwnedArray<AudioIODeviceType> &deviceTypes = adm.getAvailableDeviceTypes();
+            cout << "Audio device types: size: " << deviceTypes.size() << endl;
+
+            for (int i = 0; i < deviceTypes.size(); i++) {
+                auto deviceType = deviceTypes.getUnchecked(i);
+
+                cout << "Device type: [" << i << "]: " << deviceType->getTypeName() << endl;
+                deviceType->scanForDevices();
+                //deviceType->addListener(deviceListener);
+                const StringArray &stringArray = deviceType->getDeviceNames();
+                cout << "Device name count: " << stringArray.size() << endl;
+                for (const auto &deviceName: stringArray) {
+                    cout << deviceName << endl;
+                    cout << "Creating device named " << deviceName << endl;
+                    AudioIODevice *audioDevice = deviceType->createDevice(deviceName, "");
+                    cout << "Created audio device: " << audioDevice->getName() << ": " << audioDevice << endl;
+
+                    audioDevice->start(audioCallback);
+                }
+            }
+
+            //auto device = adm.getCurrentAudioDevice();
+            //cout << "Current audio device: " << device->getName() << endl;
 
             new thingy::Synth(midiBroker->getMidiPublisher());
         }
@@ -73,7 +134,7 @@ namespace juce {
 
         void timerCallback() override {
             auto msg = MidiMessage::noteOn(1, 10, .1f);
-            for (size_t i=0; i<outputs.size(); i++) {
+            for (size_t i = 0; i < outputs.size(); i++) {
                 if (this->outputs.at(i)) {
                     this->outputs.at(i)->sendMessageNow(msg);
                 }
