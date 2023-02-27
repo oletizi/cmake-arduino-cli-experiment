@@ -1,8 +1,9 @@
 set(BINARY ${CMAKE_PROJECT_NAME})
 
+# TODO: Figure out why there are duplicate symbols
+#        thingy_audio_white_noise.h
+#        thingy_audio_white_noise.cpp
 set(SOURCES
-        loop.h
-        loop.cpp
         thingy_audio.h
         thingy_defs.h
         thingy_display.h

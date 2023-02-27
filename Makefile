@@ -32,7 +32,7 @@ arduinobuild:
 build: jucebuild arduinobuild
 .PHONY: build
 
-upload:
+upload: arduinobuild
 	arduino-cli upload -p $(PORT) ${FQBN} .
 .PHONY: upload
 

@@ -2,10 +2,13 @@
 // Created by Orion Letizi on 2/25/23.
 //
 
-#ifndef THINGY_THINGY_AUDIO_H
-#define THINGY_THINGY_AUDIO_H
-
 #ifdef TARGET_NATIVE
+
+#ifndef THINGY_AUDIO_H
+#define THINGY_AUDIO_H
+
+#include <Arduino_dummy.h>
+#include <juce_audio_devices/juce_audio_devices.h>
 
 class MyAudioCallback : public juce::AudioIODeviceCallback {
     std::string myDeviceName;
@@ -60,8 +63,39 @@ public:
 
 };
 
+#ifndef AUDIO_BLOCK_SAMPLES
+#define AUDIO_BLOCK_SAMPLES 128
+#endif // AUDIO_BLOCK_SAMPLES
+
+typedef struct audio_block_struct {
+    uint8_t ref_count;
+    uint8_t reserved1;
+    uint16_t memory_pool_index;
+    int16_t data[AUDIO_BLOCK_SAMPLES];
+} audio_block_t;
+
+class AudioStream {
+
+public:
+    AudioStream(unsigned char ninput, audio_block_t **iqueue) {}
+
+protected:
+    static audio_block_t *allocate(void);
+    static void release(audio_block_t *block);
+    void transmit(audio_block_t *block, unsigned char index = 0);
+
+private:
+    virtual void update(void) = 0;
+
+};
+
+void AudioStream::transmit(audio_block_t *block, unsigned char index) {}
+
+void AudioStream::release(audio_block_t *block) {}
+
+audio_block_t *AudioStream::allocate(void) { return nullptr; }
+#endif // THINGY_AUDIO_H
 #else // ARDUINO
-
+#include <Arduino.h>
+#include <Audio.h>
 #endif // TARGET_NATIVE
-
-#endif //THINGY_THINGY_AUDIO_H
