@@ -10,7 +10,7 @@ namespace juce {
 
     class MyApp : public JUCEApplicationBase, Timer {
         vector<unique_ptr<MidiOutput>> outputs;
-        vector<MyAudioCallback *> audioCallbacks;
+        vector<thingy::MyAudioCallback *> audioCallbacks;
         thingy::MidiBroker *midiBroker;
     public:
         const String getApplicationName() override { return "Thingy!"; }
@@ -70,7 +70,7 @@ namespace juce {
                     cout << "  RV: " << open << endl;
 
                     cout << "  Starting device..." << endl;
-                    auto audioCallback = new MyAudioCallback(deviceName.toStdString());
+                    auto audioCallback = new thingy::MyAudioCallback(deviceName.toStdString());
                     this->audioCallbacks.push_back(audioCallback);
                     audioDevice->start(audioCallback);
                     cout << "  Started device." << endl;
